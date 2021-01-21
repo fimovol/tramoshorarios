@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .recursos{
+        height: 100px;
+        width: 100px;
+        background-color: green;
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+    .ocupado{
+        background-color: red;
+    }
+    .micaja{
+        background-color: rgb(156, 45, 184);
+    }
+    .caja{
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .motos{
+        font-size: 40px;
+    }
+</style>
+<body>
+    <div class="caja ">
+        <div class="recursos 8 libre">8</div>
+        <div class="recursos 8.30 libre">8.30</div>
+        <div class="recursos 9 libre">9</div>
+        <div class="recursos 9.30 libre">9.30</div>
+        <div class="recursos 10 libre">10</div>
+        <div class="recursos 10.30 libre">10.30</div>
+        <div class="recursos 11 libre">11</div>
+        <div class="recursos 11.30 libre">11.30</div>
+        <div class="recursos 12 libre">12</div>
+        <div class="recursos 12.30 libre">12.30</div>
+        <div class="recursos 13 libre">13</div>
+        <div class="recursos 13.30 libre">13.30</div>
+        <div class="recursos 14 libre">14</div>
+        <div class="recursos 14.30 libre">14.30</div>
+        <div class="recursos 15 libre">15</div>
+        <div class="recursos 15.30 libre">15.30</div>
+        <div class="recursos 16 libre">16</div>
+        <div class="recursos 16.30 libre">16.30</div>
+        <div class="recursos 17 libre">17</div>
+        <div class="recursos 17.30 libre">17.30</div>
+        <div class="recursos 18 libre">18</div>
+        <div class="recursos 18.30 libre">18.30</div>
+        <div class="recursos 19 libre">19</div>
+        <div class="recursos 19.30 libre">19.30</div>
+        <div class="recursos 20 libre">20</div>
+
+        <div class="motos">8</div>
+        <p>contador de motos</p>
+        <p class="prueba"></p>
+    </div>
+    <script>
+        let cajas = document.querySelectorAll(".recursos");
+        let motos = document.querySelector(".motos");
+        const bc = new BroadcastChannel('canel_test');
+        const motoaumentar = new BroadcastChannel('motoaumentar');
+        const motosdisminuir = new BroadcastChannel('motosdisminuir');
+        let color = "red"
+        let segundocolor = "green"
+        let tengomicaja = false
+        for (let i = 0; i < cajas.length; i++) {//que caja fue seleccionada
+	        cajas[i].addEventListener("click", function () {
+                
+                if(tieneClass(cajas[i], "micaja")){
+                    bc.postMessage(cajas[i].textContent);
+                    cajas[i].classList.remove("micaja");
+                    cajas[i].className += " libre";
+                    motoaumentar.postMessage(motos.textContent);
+                    motos.textContent = parseInt(motos.textContent)+1
+                    tengomicaja = false
+                    //temporizador delete
+                }
+                else if(tieneClass(cajas[i], "ocupado")){
+
+                }
+                else if(tieneClass(cajas[i], "libre")){
+                    for (let caja = 0; caja < cajas.length; caja++){
+                        if(tieneClass(cajas[caja], "micaja")){
+                            //tengo caja
+                            tengomicaja = true
+                            break
+                        }
+                    }
+                    if(!tengomicaja && motos.textContent != "0"){
+                        bc.postMessage(cajas[i].textContent);
+                        cajas[i].classList.remove("libre");
+                        cajas[i].className += " micaja";
+                        motosdisminuir.postMessage(cajas[i].textContent);
+                        motos.textContent = parseInt(motos.textContent)-1
+                        //comienza el temporizador
+                    }
+                }
+                
+	        });
+        }; 
+        //lo que pasa en las otras pestañas
+        motoaumentar.onmessage = function (ev) {
+            motos.textContent = parseInt(motos.textContent)+1
+        }
+        motosdisminuir.onmessage = function (ev) {
+            motos.textContent = parseInt(motos.textContent)-1
+            
+        }
+        bc.onmessage = function (ev) {
+            let seleccionado = document.getElementsByClassName(`${ev.data}`);
+            if(tieneClass(seleccionado[0], "micaja")){
+                    
+                }
+                else if(tieneClass(seleccionado[0], "ocupado")){
+                    seleccionado[0].classList.remove("ocupado");
+                    seleccionado[0].className += " libre";
+                }
+                else if(tieneClass(seleccionado[0], "libre")){
+                    seleccionado[0].classList.remove("libre");
+                    seleccionado[0].className += " ocupado";
+                }
+            
+            
+            
+        }
+        
+        function tieneClass(element, className) {
+            return (' ' + element.className + ' ').indexOf(' ' + className+ ' ') > -1;
+        }
+        var myVar
+        
+        myVar = setTimeout(function(){ alert("Hello"); }, 3000);
+        clearTimeout(myVar);
+    </script>
+</body>
+</html>

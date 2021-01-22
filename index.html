@@ -71,7 +71,7 @@
         for (let i = 0; i < cajas.length; i++) {//que caja fue seleccionada
 	        cajas[i].addEventListener("click", function () {
                 
-                if(tieneClass(cajas[i], "micaja")){
+                if(tieneClass(cajas[i], "micaja")){//el horario que seleccioneste es tuyo
                     bc.postMessage(cajas[i].textContent);
                     cajas[i].classList.remove("micaja");
                     cajas[i].className += " libre";
@@ -80,11 +80,11 @@
                     tengomicaja = false
                     //temporizador delete
                 }
-                else if(tieneClass(cajas[i], "ocupado")){
+                else if(tieneClass(cajas[i], "ocupado")){//el horario que seleccioneste esta ocupado
 
                 }
-                else if(tieneClass(cajas[i], "libre")){
-                    for (let caja = 0; caja < cajas.length; caja++){
+                else if(tieneClass(cajas[i], "libre")){//el horario que seleccioneste esta libre
+                    for (let caja = 0; caja < cajas.length; caja++){//busca si seleccinaste horario antes
                         if(tieneClass(cajas[caja], "micaja")){
                             //tengo caja
                             tengomicaja = true
@@ -132,10 +132,7 @@
         function tieneClass(element, className) {
             return (' ' + element.className + ' ').indexOf(' ' + className+ ' ') > -1;
         }
-        var myVar
         
-        myVar = setTimeout(function(){ alert("Hello"); }, 3000);
-        clearTimeout(myVar);
     </script>
 </body>
 </html>
